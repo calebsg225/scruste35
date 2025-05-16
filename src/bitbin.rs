@@ -5,7 +5,7 @@ use num_bigint::{BigInt, Sign};
 /// define possible charsets to decode into
 pub enum CharSet {
     ASCII,
-    None,
+    UTF8,
 }
 
 /// BitRead takes a byte array and converts it into a large integer.
@@ -65,10 +65,21 @@ impl BitRead {
         ((int_time * p) as f64 / 90000.0).round() / p as f64
     }
 
-    /// returns `num_bits` bits as bytes decoded as a charset
-    pub fn as_charset(&mut self, num_bits: usize, charset: CharSet) {
+    /// returns `num_bits` bits as bytes decoded as a char string
+    pub fn as_charset(&mut self, num_bits: usize, charset: CharSet) -> String {
         let bytes = self.as_bytes(num_bits);
-        todo!()
+        match charset {
+            CharSet::ASCII => {
+                for byte in bytes.iter() {
+                    if *byte >= 128 {
+                        panic!("Invalid ASCII sequence");
+                    }
+                }
+                std::str::from_utf8(&bytes).expect("Invalid utf-8 sequence")
+            }
+            CharSet::UTF8 => std::str::from_utf8(&bytes).expect("Invalid utf-8 sequence"),
+        }
+        .to_string()
     }
 
     /// skips `num_bits` bits
