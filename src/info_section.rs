@@ -61,8 +61,10 @@ impl SpliceInfoSection {
             e_crc_32: None,
             crc_32: 0,
         };
-        // TODO: find a better way to handle bread ownership
-        (sis.splice_command, bread) = SpliceCommand::from(sis.splice_command_type, bread);
+        sis.splice_command = SpliceCommand::from(
+            sis.splice_command_type,
+            bread.as_bytes((sis.splice_command_length << 3) as usize),
+        );
         sis.descriptor_loop_length = bread.as_int(16) as u16;
         // TODO: SpliceDescriptor(s)
         // needs to be in order

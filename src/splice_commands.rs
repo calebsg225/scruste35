@@ -1,6 +1,6 @@
 //! src/commands.rs
 
-use crate::{bitbin::BitRead, commands};
+use crate::commands;
 
 pub enum SpliceCommand {
     SpliceNull(commands::SpliceNull),
@@ -13,20 +13,17 @@ pub enum SpliceCommand {
 }
 
 impl SpliceCommand {
-    pub fn from(id: u8, &mut bread: BitRead) -> (Self, BitRead) {
-        (
-            match id {
-                0x00 => SpliceCommand::SpliceNull(commands::SpliceNull::new()),
-                0x04 => SpliceCommand::SpliceSchedule(commands::SpliceSchedule::from(bread)),
-                0x05 => SpliceCommand::SpliceInsert(commands::SpliceInsert::from(bread)),
-                0x06 => SpliceCommand::TimeSignal(commands::TimeSignal::from(bread)),
-                0x07 => {
-                    SpliceCommand::BandwidthReservation(commands::BandwidthReservation::from(bread))
-                }
-                0xff => SpliceCommand::PrivateCommand(commands::PrivateCommand::from(bread)),
-                _ => SpliceCommand::Reserved,
-            },
-            bread,
-        )
+    pub fn from(id: u8, bytes: &[u8]) -> Self {
+        match id {
+            0x00 => SpliceCommand::SpliceNull(commands::SpliceNull::new()),
+            0x04 => SpliceCommand::SpliceSchedule(commands::SpliceSchedule::from(bytes)),
+            0x05 => SpliceCommand::SpliceInsert(commands::SpliceInsert::from(bytes)),
+            0x06 => SpliceCommand::TimeSignal(commands::TimeSignal::from(bytes)),
+            0x07 => {
+                SpliceCommand::BandwidthReservation(commands::BandwidthReservation::from(bytes))
+            }
+            0xff => SpliceCommand::PrivateCommand(commands::PrivateCommand::from(bytes)),
+            _ => SpliceCommand::Reserved,
+        }
     }
 }
