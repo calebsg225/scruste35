@@ -8,7 +8,7 @@ pub enum SpliceCommand {
     SpliceInsert(commands::SpliceInsert),
     TimeSignal(commands::TimeSignal),
     BandwidthReservation(commands::BandwidthReservation),
-    PrivateCommand,
+    PrivateCommand(commands::PrivateCommand),
     Reserved,
 }
 
@@ -23,7 +23,7 @@ impl SpliceCommand {
                 0x07 => {
                     SpliceCommand::BandwidthReservation(commands::BandwidthReservation::from(bread))
                 }
-                0xff => SpliceCommand::PrivateCommand,
+                0xff => SpliceCommand::PrivateCommand(commands::PrivateCommand::from(bread)),
                 _ => SpliceCommand::Reserved,
             },
             bread,
