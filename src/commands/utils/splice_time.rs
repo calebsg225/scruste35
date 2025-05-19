@@ -9,8 +9,7 @@ pub struct SpliceTime {
 }
 
 impl SpliceTime {
-    pub fn from(bytes: &[u8]) -> (Self, usize) {
-        let mut bread = BitRead::from(bytes);
+    pub fn from(mut bread: BitRead) -> (Self, usize) {
         let start = bread.get_idx();
         let time_specified_flag = bread.as_flag();
         let mut pts_time = None;
