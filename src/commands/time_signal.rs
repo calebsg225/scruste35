@@ -5,7 +5,7 @@ use crate::bitbin::BitRead;
 pub struct TimeSignal {}
 
 impl TimeSignal {
-    pub fn new(bread: BitRead) -> Self {
+    pub fn from(bread: &mut BitRead) -> Self {
         Self {}
     }
 }
