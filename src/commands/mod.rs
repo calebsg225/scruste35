@@ -6,6 +6,7 @@ mod splice_insert;
 mod splice_null;
 mod splice_schedule;
 mod time_signal;
+mod utils;
 
 pub use bandwidth_reservation::*;
 pub use private_command::*;
