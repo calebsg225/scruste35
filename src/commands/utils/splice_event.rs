@@ -1,4 +1,4 @@
-//! src/commands/command_utils/splice_event.rs
+//! src/commands/utils/splice_event.rs
 
 use crate::bitbin::BitRead;
 
