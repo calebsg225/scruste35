@@ -27,6 +27,9 @@ impl BitRead {
     }
 
     /// returns the current BitRead index
+    /// used for:
+    /// - keeping track of how many bits have been read between calls
+    /// - determining how many bits are left
     pub fn get_idx(&self) -> usize {
         self.idx
     }
