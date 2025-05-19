@@ -1,6 +1,7 @@
 //! src/commands/utils/splice_event.rs
 
 use crate::bitbin::BitRead;
+use crate::commands::utils::BreakDuration;
 
 pub struct SpliceEvent {
     splice_event_id: u32,
@@ -10,8 +11,7 @@ pub struct SpliceEvent {
     program_splice_flag: Option<bool>,
     duration_flag: Option<bool>,
     utc_splice_time: Option<u32>,
-    // TODO: implement BreakDuration
-    // break_duration: Option<BreakDuration>,
+    break_duration: Option<BreakDuration>,
     unique_program_id: Option<u16>,
     avail_num: Option<u8>,
     avails_expected: Option<u8>,
@@ -28,6 +28,7 @@ impl SpliceEvent {
             program_splice_flag: None,
             duration_flag: None,
             utc_splice_time: None,
+            break_duration: None,
             unique_program_id: None,
             avail_num: None,
             avails_expected: None,
@@ -42,8 +43,10 @@ impl SpliceEvent {
                 se.utc_splice_time = Some(bread.as_int(32) as u32);
             }
             if let Some(true) = se.duration_flag {
-                // TODO: implement BreakDuration
-                todo!();
+                // NOTE: This assumes BreakDuration is 5 bytes long. It is, but
+                // it could be something else in the future.
+                // TODO: Keep track of how long BreakDuration is instead
+                se.break_duration = Some(BreakDuration::from(&bread.as_bytes(5)));
             }
             se.unique_program_id = Some(bread.as_int(16) as u16);
             se.avail_num = Some(bread.as_int(8) as u8);
