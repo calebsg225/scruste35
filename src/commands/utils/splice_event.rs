@@ -2,15 +2,18 @@
 
 use crate::bitbin::BitRead;
 use crate::commands::utils::BreakDuration;
+use crate::commands::utils::SpliceTime;
 
 pub struct SpliceEvent {
     splice_event_id: u32,
     splice_event_cancel_indicator: bool,
-    event_id_compliance_flag: bool,
+    event_id_compliance_flag: Option<bool>,
     out_of_network_indicator: Option<bool>,
     program_splice_flag: Option<bool>,
     duration_flag: Option<bool>,
+    splice_immediate_flag: Option<bool>,
     utc_splice_time: Option<u32>,
+    splice_time: Option<SpliceTime>,
     break_duration: Option<BreakDuration>,
     unique_program_id: Option<u16>,
     avail_num: Option<u8>,
@@ -24,11 +27,13 @@ impl SpliceEvent {
         let mut se = Self {
             splice_event_id: bread.as_int(32) as u32,
             splice_event_cancel_indicator: bread.as_flag(),
-            event_id_compliance_flag: bread.as_flag(),
+            event_id_compliance_flag: Some(bread.as_flag()),
             out_of_network_indicator: None,
             program_splice_flag: None,
             duration_flag: None,
+            splice_immediate_flag: None,
             utc_splice_time: None,
+            splice_time: None,
             break_duration: None,
             unique_program_id: None,
             avail_num: None,
@@ -57,5 +62,48 @@ impl SpliceEvent {
     }
 
     /// decode a `splice_event` from a `splice_insert()` splice command
-    pub fn from_insert() {}
+    pub fn from_insert(mut bread: BitRead) -> (Self, usize) {
+        let start = bread.get_idx();
+        let mut se = Self {
+            splice_event_id: bread.as_int(32) as u32,
+            splice_event_cancel_indicator: bread.as_flag(),
+            out_of_network_indicator: None,
+            program_splice_flag: None,
+            duration_flag: None,
+            splice_immediate_flag: None,
+            event_id_compliance_flag: None,
+            splice_time: None,
+            break_duration: None,
+            unique_program_id: None,
+            avail_num: None,
+            avails_expected: None,
+            utc_splice_time: None,
+        };
+        bread.forward(7); // 7 bits reserved
+        if se.splice_event_cancel_indicator {
+            se.out_of_network_indicator = Some(bread.as_flag());
+            let program_splice_flag = bread.as_flag();
+            se.program_splice_flag = Some(program_splice_flag);
+            se.duration_flag = Some(bread.as_flag());
+            let splice_immediate_flag = bread.as_flag();
+            se.splice_immediate_flag = Some(splice_immediate_flag);
+            se.event_id_compliance_flag = Some(bread.as_flag());
+            bread.forward(3); // 3 bits reserved
+            if program_splice_flag && !splice_immediate_flag {
+                let (splice_time, splice_time_bit_length) = SpliceTime::from(bread.clone());
+                se.splice_time = Some(splice_time);
+                bread.forward(splice_time_bit_length);
+            }
+            if let Some(true) = se.duration_flag {
+                // NOTE: This assumes BreakDuration is 5 bytes long. It is, but
+                // it could be something else in the future.
+                // TODO: Keep track of how long BreakDuration is instead
+                se.break_duration = Some(BreakDuration::from(&bread.as_bytes(5)));
+            }
+            se.unique_program_id = Some(bread.as_int(16) as u16);
+            se.avail_num = Some(bread.as_int(8) as u8);
+            se.avails_expected = Some(bread.as_int(8) as u8);
+        }
+        (se, start - bread.get_idx())
+    }
 }
