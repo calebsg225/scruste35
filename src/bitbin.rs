@@ -10,6 +10,7 @@ pub enum CharSet {
 
 /// BitRead takes a byte array and converts it into a large integer.
 /// Several methods are availale for slicing off bits.
+#[derive(Clone)]
 pub struct BitRead {
     idx: usize,
     bit_size: usize,

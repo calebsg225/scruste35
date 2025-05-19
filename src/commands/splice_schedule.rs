@@ -16,10 +16,8 @@ impl SpliceSchedule {
         let mut splice_events: Vec<SpliceEvent> = Vec::new();
 
         for _ in 0..splice_count {
-            let splice_event: SpliceEvent;
-            // NOTE: currently passing same instance of `bread` to and from each `SpliceEvent`.
-            // TODO: find a better way? keep track of the bits decoded instead?
-            (splice_event, bread) = SpliceEvent::from_schedule(bread);
+            let (splice_event, event_bit_count) = SpliceEvent::from_schedule(bread.clone());
+            bread.forward(event_bit_count);
             splice_events.push(splice_event);
         }
 

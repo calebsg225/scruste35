@@ -19,7 +19,8 @@ pub struct SpliceEvent {
 
 impl SpliceEvent {
     /// decode a `splice_event` from a `splice_schedule()` splice command
-    pub fn from_schedule(mut bread: BitRead) -> (Self, BitRead) {
+    pub fn from_schedule(mut bread: BitRead) -> (Self, usize) {
+        let start = bread.get_idx();
         let mut se = Self {
             splice_event_id: bread.as_int(32) as u32,
             splice_event_cancel_indicator: bread.as_flag(),
@@ -52,7 +53,7 @@ impl SpliceEvent {
             se.avail_num = Some(bread.as_int(8) as u8);
             se.avails_expected = Some(bread.as_int(8) as u8);
         }
-        (se, bread)
+        (se, start - bread.get_idx())
     }
 
     /// decode a `splice_event` from a `splice_insert()` splice command
