@@ -1,5 +1,5 @@
 //! /src/main.rs
 
 fn main() {
-    println!("Hello, world!");
+    println!("Hello, Scutty 35!");
 }

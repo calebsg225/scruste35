@@ -2,6 +2,7 @@
 
 use crate::commands;
 
+/// Table 7 - splice-command-type values
 pub enum SpliceCommand {
     SpliceNull(commands::SpliceNull),
     SpliceSchedule(commands::SpliceSchedule),

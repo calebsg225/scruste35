@@ -3,6 +3,7 @@
 use crate::bitbin::BitRead;
 use crate::splice_commands::SpliceCommand;
 
+/// Table 6 - sap_type values
 pub fn sap_type_values(id: u8) -> String {
     match id {
         0x00 => "Type 1 Closed GOP with no leading pictures",
@@ -17,6 +18,7 @@ pub fn sap_type_values(id: u8) -> String {
     .to_string()
 }
 
+/// Table 5 - splice_info_section()
 pub struct SpliceInfoSection {
     table_id: String,
     section_syntax_indicator: bool,
@@ -63,7 +65,7 @@ impl SpliceInfoSection {
         };
         sis.splice_command = SpliceCommand::from(
             sis.splice_command_type,
-            bread.as_bytes((sis.splice_command_length << 3) as usize),
+            &bread.as_bytes((sis.splice_command_length << 3) as usize),
         );
         sis.descriptor_loop_length = bread.as_int(16) as u16;
         // TODO: SpliceDescriptor(s)

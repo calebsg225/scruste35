@@ -2,6 +2,7 @@
 
 use crate::bitbin::BitRead;
 
+/// Table 12 - bandwidth_reservation()
 pub struct BandwidthReservation {}
 
 impl BandwidthReservation {

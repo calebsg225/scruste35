@@ -2,6 +2,7 @@
 
 use crate::bitbin::BitRead;
 
+/// Table 13 - private_command()
 pub struct PrivateCommand {}
 
 impl PrivateCommand {

@@ -2,6 +2,7 @@
 
 use crate::bitbin::BitRead;
 
+/// Table 11 - time_signal()
 pub struct TimeSignal {}
 
 impl TimeSignal {

@@ -2,6 +2,7 @@
 
 use crate::bitbin::BitRead;
 
+/// Table 10 - splice_insert()
 pub struct SpliceInsert {}
 
 impl SpliceInsert {
