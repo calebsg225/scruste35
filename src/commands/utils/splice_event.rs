@@ -49,10 +49,10 @@ impl SpliceEvent {
                 se.utc_splice_time = Some(bread.as_int(32) as u32);
             }
             if let Some(true) = se.duration_flag {
-                // NOTE: This assumes BreakDuration is 5 bytes long. It is, but
-                // it could be something else in the future.
-                // TODO: Keep track of how long BreakDuration is instead
-                se.break_duration = Some(BreakDuration::from(&bread.as_bytes(5)));
+                let (break_duration, bread_duration_bit_length) =
+                    BreakDuration::from(bread.clone());
+                bread.forward(bread_duration_bit_length);
+                se.break_duration = Some(break_duration);
             }
             se.unique_program_id = Some(bread.as_int(16) as u16);
             se.avail_num = Some(bread.as_int(8) as u8);
@@ -95,10 +95,10 @@ impl SpliceEvent {
                 bread.forward(splice_time_bit_length);
             }
             if let Some(true) = se.duration_flag {
-                // NOTE: This assumes BreakDuration is 5 bytes long. It is, but
-                // it could be something else in the future.
-                // TODO: Keep track of how long BreakDuration is instead
-                se.break_duration = Some(BreakDuration::from(&bread.as_bytes(5)));
+                let (break_duration, bread_duration_bit_length) =
+                    BreakDuration::from(bread.clone());
+                bread.forward(bread_duration_bit_length);
+                se.break_duration = Some(break_duration);
             }
             se.unique_program_id = Some(bread.as_int(16) as u16);
             se.avail_num = Some(bread.as_int(8) as u8);

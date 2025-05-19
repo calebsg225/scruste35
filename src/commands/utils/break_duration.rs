@@ -9,14 +9,17 @@ pub struct BreakDuration {
 }
 
 impl BreakDuration {
-    pub fn from(bytes: &[u8]) -> Self {
-        let mut bread = BitRead::from(bytes);
-        Self {
-            auto_return: bread.as_flag(),
-            duration: {
-                bread.forward(6); // 6 bits reserved
-                bread.as_int(33)
+    pub fn from(mut bread: BitRead) -> (Self, usize) {
+        let start = bread.get_idx();
+        (
+            Self {
+                auto_return: bread.as_flag(),
+                duration: {
+                    bread.forward(6); // 6 bits reserved
+                    bread.as_int(33)
+                },
             },
-        }
+            start - bread.get_idx(),
+        )
     }
 }
