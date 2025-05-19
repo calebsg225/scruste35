@@ -9,6 +9,7 @@ pub struct SpliceInsert {
 }
 
 impl SpliceInsert {
+    /// decode splice_insert from byte array `bytes`
     pub fn from(bytes: &[u8]) -> Self {
         let (splice_event, _) = SpliceEvent::from_insert(BitRead::from(bytes));
         Self { splice_event }

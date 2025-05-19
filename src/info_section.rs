@@ -42,6 +42,7 @@ pub struct SpliceInfoSection {
 }
 
 impl SpliceInfoSection {
+    /// decode splice_info_section() from inputed `bytes`
     pub fn from(bytes: &[u8]) -> Self {
         let mut bread = BitRead::from(bytes);
         let mut sis = Self {

@@ -9,6 +9,7 @@ pub struct PrivateCommand {
 }
 
 impl PrivateCommand {
+    /// decode private_command from byte array `bytes`
     pub fn from(bytes: &[u8]) -> Self {
         let mut bread = BitRead::from(bytes);
         Self {

@@ -10,6 +10,7 @@ pub struct SpliceSchedule {
 }
 
 impl SpliceSchedule {
+    /// decode splice_schedule from byte array `bytes`
     pub fn from(bytes: &[u8]) -> Self {
         let mut bread = BitRead::from(bytes);
         let splice_count = bread.as_int(8) as u8;

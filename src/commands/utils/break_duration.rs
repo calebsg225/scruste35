@@ -9,6 +9,7 @@ pub struct BreakDuration {
 }
 
 impl BreakDuration {
+    /// decode break_duration from parent bitreader 'bread'
     pub fn from(mut bread: BitRead) -> (Self, usize) {
         let start = bread.get_idx();
         (

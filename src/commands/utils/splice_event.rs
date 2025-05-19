@@ -22,6 +22,7 @@ pub struct SpliceEvent {
 
 impl SpliceEvent {
     /// decode a `splice_event` from a `splice_schedule()` splice command
+    /// using its bitreader `bread`
     pub fn from_schedule(mut bread: BitRead) -> (Self, usize) {
         let start = bread.get_idx();
         let mut se = Self {
@@ -62,6 +63,7 @@ impl SpliceEvent {
     }
 
     /// decode a `splice_event` from a `splice_insert()` splice command
+    /// using its bitreader `bread`
     pub fn from_insert(mut bread: BitRead) -> (Self, usize) {
         let start = bread.get_idx();
         let mut se = Self {

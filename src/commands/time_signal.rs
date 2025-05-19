@@ -10,6 +10,7 @@ pub struct TimeSignal {
 }
 
 impl TimeSignal {
+    /// decode time_signal from byte array `bytes`
     pub fn from(bytes: &[u8]) -> Self {
         let (splice_time, _) = SpliceTime::from(BitRead::from(bytes));
         Self { splice_time }

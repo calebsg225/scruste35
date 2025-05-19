@@ -9,6 +9,7 @@ pub struct SpliceTime {
 }
 
 impl SpliceTime {
+    /// decode splice_time from parent bitreader `bread`
     pub fn from(mut bread: BitRead) -> (Self, usize) {
         let start = bread.get_idx();
         let time_specified_flag = bread.as_flag();

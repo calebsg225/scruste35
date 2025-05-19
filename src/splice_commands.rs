@@ -14,6 +14,7 @@ pub enum SpliceCommand {
 }
 
 impl SpliceCommand {
+    /// decode a splice_command specified by `id` from byte array `bytes`
     pub fn from(id: u8, bytes: &[u8]) -> Self {
         match id {
             0x00 => SpliceCommand::SpliceNull(commands::SpliceNull::new()),

@@ -6,6 +6,7 @@ use crate::bitbin::BitRead;
 pub struct BandwidthReservation {}
 
 impl BandwidthReservation {
+    /// decode bandwidth_reservation from byte array `bytes`
     pub fn from(bytes: &[u8]) -> Self {
         Self {}
     }
