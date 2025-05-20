@@ -70,9 +70,10 @@ impl SpliceEvent {
             self.event_id_compliance_flag = Some(bread.as_flag());
             bread.forward(3); // 3 bits reserved
             if program_splice_flag && !splice_immediate_flag {
-                let (splice_time, splice_time_bit_length) = SpliceTime::from(bread.clone());
+                let (splice_time, remaining_bytes) =
+                    SpliceTime::from(&bread.as_bytes(bread.get_idx()));
                 self.splice_time = Some(splice_time);
-                bread.forward(splice_time_bit_length);
+                bread = BitRead::from(&remaining_bytes);
             }
             if let Some(true) = self.duration_flag {
                 let (break_duration, bread_duration_bit_length) =
