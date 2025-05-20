@@ -9,18 +9,27 @@ pub struct BreakDuration {
 }
 
 impl BreakDuration {
-    /// decode break_duration from parent bitreader 'bread'
-    pub fn from(mut bread: BitRead) -> (Self, usize) {
-        let start = bread.get_idx();
-        (
-            Self {
-                auto_return: bread.as_flag(),
-                duration: {
-                    bread.forward(6); // 6 bits reserved
-                    bread.as_int(33)
-                },
-            },
-            start - bread.get_idx(),
-        )
+    /// build an empty `break_duration()` instance
+    pub fn new() -> Self {
+        Self {
+            auto_return: false,
+            duration: 0,
+        }
+    }
+
+    /// build a `break_duration()` instance from byte array `bytes`
+    pub fn from(bytes: &[u8]) -> (Self, Vec<u8>) {
+        let mut bd = BreakDuration::new();
+        let remaining_bytes = bd.decode(bytes);
+        (bd, remaining_bytes)
+    }
+
+    /// decode `break_duration()` from byte array `bytes`
+    pub fn decode(&mut self, bytes: &[u8]) -> Vec<u8> {
+        let mut bread = BitRead::from(bytes);
+        self.auto_return = bread.as_flag();
+        bread.forward(6); // 6 bits reserved
+        self.duration = bread.as_int(33);
+        bread.as_bytes(bread.get_idx())
     }
 }

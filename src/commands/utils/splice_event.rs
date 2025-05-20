@@ -76,10 +76,10 @@ impl SpliceEvent {
                 bread = BitRead::from(&remaining_bytes);
             }
             if let Some(true) = self.duration_flag {
-                let (break_duration, bread_duration_bit_length) =
-                    BreakDuration::from(bread.clone());
-                bread.forward(bread_duration_bit_length);
+                let (break_duration, remaining_bytes) =
+                    BreakDuration::from(&bread.as_bytes(bread.get_idx()));
                 self.break_duration = Some(break_duration);
+                bread = BitRead::from(&remaining_bytes);
             }
             self.unique_program_id = Some(bread.as_int(16) as u16);
             self.avail_num = Some(bread.as_int(8) as u8);
@@ -103,10 +103,10 @@ impl SpliceEvent {
                 self.utc_splice_time = Some(bread.as_int(32) as u32);
             }
             if let Some(true) = self.duration_flag {
-                let (break_duration, bread_duration_bit_length) =
-                    BreakDuration::from(bread.clone());
-                bread.forward(bread_duration_bit_length);
+                let (break_duration, remaining_bytes) =
+                    BreakDuration::from(&bread.as_bytes(bread.get_idx()));
                 self.break_duration = Some(break_duration);
+                bread = BitRead::from(&remaining_bytes);
             }
             self.unique_program_id = Some(bread.as_int(16) as u16);
             self.avail_num = Some(bread.as_int(8) as u8);
